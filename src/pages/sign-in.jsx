@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import mainLogo from '../assets/argentBankLogo.png';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../redux';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
@@ -13,16 +15,18 @@ const SignIn = () => {
     const [passwordError, setPasswordError] = useState('');
     const { fetchData, data, loading, error } = useFetch();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (data && data.status === 200) {
             console.log('Token:', data.body?.token);
+            dispatch(setToken(data.body.token)); // Dispatcher l'action pour sauvegarder le token
             navigate('/user/');
         } else if (error) {
             setEmailError('Invalid email');
             setPasswordError('Invalid password');
         }
-    }, [data, error, navigate]);
+    }, [data, error, navigate, dispatch]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
