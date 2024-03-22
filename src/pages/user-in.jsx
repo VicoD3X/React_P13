@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import mainLogo from '../assets/argentBankLogo.png'; // Assurez-vous d'ajuster le chemin d'accès
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const UserIn = () => {
     return (

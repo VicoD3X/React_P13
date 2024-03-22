@@ -1,11 +1,39 @@
-
-import '../App.css';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useFetch from '../components/Hook'; // Assurez-vous que ce chemin est correct
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import mainLogo from '../assets/argentBankLogo.png'; // Import du logo
+import mainLogo from '../assets/argentBankLogo.png';
+import { Link } from 'react-router-dom';
 
 const SignIn = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const { fetchData, data, loading, error } = useFetch();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (data && data.status === 200) {
+            console.log('Token:', data.body?.token);
+            navigate('/user/');
+        } else if (error) {
+            setEmailError('Invalid email');
+            setPasswordError('Invalid password');
+        }
+    }, [data, error, navigate]);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setEmailError('');
+        setPasswordError('');
+
+        fetchData('http://localhost:3001/api/v1/user/login', {
+            body: { email, password },
+        });
+    };
+
     return (
         <>
             <div className='master-contain'>
@@ -13,7 +41,7 @@ const SignIn = () => {
                     <Link className="main-nav-logo" to="/home/">
                         <img
                             className="main-nav-logo-image"
-                            src={mainLogo} // Utilisation du logo importé
+                            src={mainLogo}
                             alt="Argent Bank Logo"
                         />
                         <h1 className="sr-only">Argent Bank</h1>
@@ -21,16 +49,18 @@ const SignIn = () => {
                 </nav>
                 <main className="main bg-dark">
                     <section className="sign-in-content">
-                        <FontAwesomeIcon icon={faCircleUser} className="sign-in-icon" /> {/* Utilisation de FontAwesomeIcon */}
+                        <FontAwesomeIcon icon={faCircleUser} className="sign-in-icon" />
                         <h1>Sign In</h1>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div className="input-wrapper">
-                                <label htmlFor="username">Username</label>
-                                <input type="text" id="username" />
+                                <label htmlFor="username">Email</label>
+                                <input type="email" id="username" onChange={(event) => setEmail(event.target.value)} value={email} />
+                                {emailError && <p className="error">{emailError}</p>}
                             </div>
                             <div className="input-wrapper">
                                 <label htmlFor="password">Password</label>
-                                <input type="password" id="password" />
+                                <input type="password" id="password" onChange={(event) => setPassword(event.target.value)} value={password} />
+                                {passwordError && <p className="error">{passwordError}</p>}
                             </div>
                             <div className="input-remember">
                                 <input type="checkbox" id="remember-me" />
@@ -38,6 +68,8 @@ const SignIn = () => {
                             </div>
                             <button type="submit" className="sign-in-button">Sign In</button>
                         </form>
+                        {loading && <p>Loading...</p>}
+                        {error && <div className="error general-error">Login failed. Please check your credentials.</div>}
                     </section>
                 </main>
                 <footer className="footer">

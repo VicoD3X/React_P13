@@ -1,35 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
-// Définition du hook personnalisé useFetch qui prend une URL comme argument.
-function useFetch(url) {
-    // Initialisation de l'état pour les données, le chargement, et l'erreur.
+function useFetch() {
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    // Lance une erreur spécifique si l'API ne fonctionne pas
-                    throw new Error("L'API ne fonctionne pas");
-                }
-                const data = await response.json();
-                setData(data);
-            } catch (error) {
-                // Capture les erreurs, y compris les erreurs réseau/API
-                setError(error.message); // Utilise error.message pour afficher le message d'erreur personnalisé
-                console.log(error);
-            } finally {
-                setLoading(false);
+    const fetchData = useCallback(async (url, options) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(options.body),
+            });
+
+            if (!response.ok) {
+                throw new Error("L'API ne fonctionne pas");
             }
-        };
 
-        fetchData();
-    }, [url]);
+            const data = await response.json();
+            setData(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-    return { data, loading, error };
+    return { fetchData, data, loading, error };
 }
+
 
 export default useFetch;
