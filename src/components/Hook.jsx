@@ -5,24 +5,35 @@ function useFetch() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchData = useCallback(async (url, options) => {
+    const fetchData = useCallback(async (url, options = {}, method = 'GET') => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(url, {
-                method: 'POST',
+            const config = {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
+                    // Permet la personnalisation des headers ici
                 },
-                body: JSON.stringify(options.body),
-            });
+            };
 
-            if (!response.ok) {
-                throw new Error("L'API ne fonctionne pas");
+            // Permettre la personnalisation des headers
+            if (options.headers) {
+                config.headers = { ...config.headers, ...options.headers };
             }
 
-            const data = await response.json();
-            setData(data);
+            if (method === 'POST' && options.body) {
+                config.body = JSON.stringify(options.body);
+            }
+
+            const response = await fetch(url, config);
+
+            if (!response.ok) {
+                throw new Error("L'API ne fonctionne pas comme prévu.");
+            }
+
+            const responseData = await response.json();
+            setData(responseData);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -32,6 +43,5 @@ function useFetch() {
 
     return { fetchData, data, loading, error };
 }
-
 
 export default useFetch;

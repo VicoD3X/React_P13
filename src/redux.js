@@ -2,25 +2,23 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 
 // Définit un slice pour gérer l'état de l'utilisateur
 const userSlice = createSlice({
-
-  // Nom du slice
-  name: 'user',
-  // Etat initial
+  name: 'user', // Nom du slice
   initialState: {
-    // Le token de l'utilisateur (null par défaut)
-    token: null, // Initialisation de la propriété token à null
+    token: null, // Le token de l'utilisateur (null par défaut)
+    info: null, // Ajout d'un champ pour les informations de l'utilisateur
   },
   reducers: {
     setToken: (state, action) => {
-
-      // Le nouveau token est passé en payload
       state.token = action.payload; // Mettre à jour le token dans l'état
+    },
+    setUserInfo: (state, action) => {
+      state.info = action.payload; // Mettre à jour les informations de l'utilisateur
     },
   },
 });
 
-// Exporte l'action setToken
-export const { setToken } = userSlice.actions;
+// Exporte les actions
+export const { setToken, setUserInfo } = userSlice.actions;
 
 // Crée le store Redux avec le reducer user
 export const store = configureStore({

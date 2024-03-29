@@ -33,9 +33,8 @@ const SignIn = () => {
         setEmailError('');
         setPasswordError('');
 
-        fetchData('http://localhost:3001/api/v1/user/login', {
-            body: { email, password },
-        });
+        fetchData('http://localhost:3001/api/v1/user/login',
+            { body: { email, password } }, 'POST');
     };
 
     return (
