@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import useFetch from '../components/Hook'; // Assurez-vous que le chemin est correct
 import { setUserInfo } from '../redux'; // Assurez-vous que l'importation de l'action est correcte
 import mainLogo from '../assets/argentBankLogo.png';
+import Popup from '../components/Popup'
 
 const UserIn = () => {
   const dispatch = useDispatch();
@@ -60,8 +61,23 @@ const UserIn = () => {
       <main className="main bg-dark">
         <div className="header">
           <h1>Welcome back<br />{userInfo?.firstName} {userInfo?.lastName}!</h1>
-          <button className="edit-button">Edit Name</button>
+          <Popup userInfo={userInfo} onUpdate={(newName) => {
+            // Logique pour mettre à jour le nom de l'utilisateur via une requête API
+            console.log("New Name: ", newName);
+            // Mise à jour des informations de l'utilisateur dans Redux si nécessaire
+          }} />
         </div>
+        <h2 className="sr-only">Accounts</h2>
+        <section className="account">
+          <div className="account-content-wrapper">
+            <h3 className="account-title">Argent Bank Checking (x8349)</h3>
+            <p className="account-amount">$2,082.79</p>
+            <p className="account-amount-description">Available Balance</p>
+          </div>
+          <div className="account-content-wrapper cta">
+            <button className="transaction-button">View transactions</button>
+          </div>
+        </section>
       </main>
       <footer className="footer">
         <p className="footer-text">Copyright &copy; 2020 Argent Bank</p>
