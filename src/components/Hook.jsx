@@ -22,7 +22,7 @@ function useFetch() {
                 config.headers = { ...config.headers, ...options.headers };
             }
 
-            if (method === 'POST' && options.body) {
+            if ((method === 'POST' || method === 'PUT') && options.body) {
                 config.body = JSON.stringify(options.body);
             }
 
