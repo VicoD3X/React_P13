@@ -32,22 +32,18 @@ const UserIn = () => {
     }
   }, [data, dispatch]);
 
-  const updateProfile = async (updatedInfo) => {
-    const response = await fetchData('http://localhost:3001/api/v1/user/profile', {
+  const updateProfile = (updatedInfo) => {
+    console.log(updatedInfo);
+    console.log(userInfo);
+    dispatch (setUserInfo(updatedInfo))
+     fetchData('http://localhost:3001/api/v1/user/profile', {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
       body: updatedInfo,
     }, 'PUT'); // Ici, on utilise 'PUT' pour la mise à jour conformément à la documentation de l'API
 
-    // Traiter la réponse ici
-    if (response && response.status === 200) {
 
-      // VERIF DAVID 
-      console.log("Profil mis à jour avec succès :");
-    } else {
-      console.log("État faux negatif :", { data, error, updatedInfo });;
-    }
   };
 
   if (loading) return <p>Loading...</p>;
