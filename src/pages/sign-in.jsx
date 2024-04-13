@@ -9,34 +9,47 @@ import { useDispatch } from 'react-redux';
 import { setToken } from '../redux';
 
 const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const { fetchData, data, loading, error } = useFetch();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const [email, setEmail] = useState('');                  // État pour stocker l'email entré par l'utilisateur.
+    const [password, setPassword] = useState('');            // État pour stocker le mot de passe entré.
+    const [emailError, setEmailError] = useState('');        // État pour gérer les erreurs liées à l'email.
+    const [passwordError, setPasswordError] = useState('');  // État pour gérer les erreurs liées au mot de passe.
+    const { fetchData, data, loading, error } = useFetch();  // Utilise un hook personnalisé pour les requêtes fetch.
+    const navigate = useNavigate();                          // Hook pour naviguer entre les routes.
+    const dispatch = useDispatch();                          // Hook pour dispatcher les actions Redux.
 
+
+
+    // Utilise useEffect pour réagir aux changements dans les données de l'API ou les erreurs.
     useEffect(() => {
-        if (data && data.status === 200) {
-            console.log('Token:', data.body?.token);
-            dispatch(setToken(data.body.token)); // Dispatcher l'action pour sauvegarder le token
-            navigate('/user/');
-        } else if (error) {
-            setEmailError('Invalid email');
-            setPasswordError('Invalid password');
+        if (data && data.status === 200) {             // Vérifie si la réponse est correcte.
+            console.log('Token:', data.body?.token);   // Log le token reçu pour le debug.
+            dispatch(setToken(data.body.token));       // Sauvegarde le token dans l'état global.
+            navigate('/user/');                        // Redirige l'utilisateur vers la page utilisateur.
+        } else if (error) {                            // Si une erreur est présente,
+            setEmailError('Invalid email');            // Définit un message d'erreur pour l'email.
+            setPasswordError('Invalid password');      // Définit un message d'erreur pour le mot de passe.
         }
-    }, [data, error, navigate, dispatch]);
+    }, [data, error, navigate, dispatch]);  // Liste des dépendances de useEffect.
 
+
+
+    // Fonction appelée lors de la soumission du formulaire.
     const handleSubmit = (event) => {
-        event.preventDefault();
-        setEmailError('');
-        setPasswordError('');
+        event.preventDefault();          // Empêche le comportement par défaut du formulaire.
+        setEmailError('');               // Réinitialise les erreurs d'email.
+        setPasswordError('');            // Réinitialise les erreurs de mot de passe.
 
+        // Exécute la requête de connexion avec les données fournies par l'utilisateur.
         fetchData('http://localhost:3001/api/v1/user/login',
-            { body: { email, password } }, 'POST');
+            { body: { email, password } }, 'POST');  // Requête POST avec email et mot de passe.
     };
 
+
+    // Gestion de l'affichage en cas de chargement ou d'erreur.
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    // Rendu du composant, incluant la navigation, l'accueil de l'utilisateur et la gestion du compte.
     return (
         <>
             <div className='master-contain'>

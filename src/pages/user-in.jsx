@@ -1,53 +1,62 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import useFetch from '../components/Hook'; // Assurez-vous que le chemin est correct
-import { setUserInfo } from '../redux'; // Assurez-vous que l'importation de l'action est correcte
-import mainLogo from '../assets/argentBankLogo.png';
-import Popup from '../components/Popup';
+import useFetch from '../components/Hook'; 
+import { setUserInfo } from '../redux'; 
+import mainLogo from '../assets/argentBankLogo.png'; 
+import Popup from '../components/Popup'; 
 
 const UserIn = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { fetchData, data, loading, error } = useFetch();
-  const token = useSelector((state) => state.user.token);
-  const userInfo = useSelector((state) => state.user.info);
+  const dispatch = useDispatch(); // Accès à la fonction dispatch de Redux pour envoyer des actions.
+  const navigate = useNavigate(); // Hook pour la navigation programmée entre les routes.
+  const { fetchData, data, loading, error } = useFetch(); // Utilisation du hook useFetch pour les opérations de réseau.
+  const token = useSelector((state) => state.user.token); // Sélection du token utilisateur depuis l'état Redux.
+  const userInfo = useSelector((state) => state.user.info); // Sélection des informations de l'utilisateur depuis l'état Redux.
 
+
+
+  // Déclencheur d'effets pour la gestion de la navigation en absence de token.
   useEffect(() => {
-    if (!token) {
-      navigate('/home/sign-in');
-      return;
+    if (!token) {                      // Vérifie si le token n'existe pas.
+      navigate('/home/sign-in');       // Redirige vers la page de connexion.
+      return;                          // Sort de l'effet si aucun token.
     }
 
+
+    // Si le token existe, fait une requête pour récupérer le profil de l'utilisateur.
     fetchData('http://localhost:3001/api/v1/user/profile', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,  // Ajoute le token dans les en-têtes pour l'authentification.
       },
-    }, 'POST'); // Utiliser 'POST' conformément aux exigences de ton API
-  }, [token, fetchData, navigate]);
+    }, 'POST');  // Utilise la méthode POST pour la requête.
+  }, [token, fetchData, navigate]);  // Dépendances de l'effet.
 
+
+
+  // Effet pour actualiser les informations de l'utilisateur dans le store Redux.
   useEffect(() => {
-    if (data && data.status === 200 && data.body) {
-      dispatch(setUserInfo(data.body));
+    if (data && data.status === 200 && data.body) {  // Vérifie si les données sont disponibles et valides.
+      dispatch(setUserInfo(data.body));              // Met à jour les informations de l'utilisateur dans Redux.
     }
-  }, [data, dispatch]);
+  }, [data, dispatch]);  // Dépendances de l'effet.
 
+  // Fonction pour envoyer une mise à jour du profil de l'utilisateur.
   const updateProfile = (updatedInfo) => {
-    console.log(updatedInfo);
-    console.log(userInfo);
-    dispatch (setUserInfo(updatedInfo))
-     fetchData('http://localhost:3001/api/v1/user/profile', {
+    dispatch(setUserInfo(updatedInfo));  // Dispatch l'action pour mettre à jour les infos dans Redux.
+    fetchData('http://localhost:3001/api/v1/user/profile', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,  // Authentification avec token JWT.
       },
-      body: updatedInfo,
-    }, 'PUT'); // Ici, on utilise 'PUT' pour la mise à jour conformément à la documentation de l'API
-
-
+      body: updatedInfo,  // Corps de la requête avec les informations mises à jour.
+    }, 'PUT');            // Utilise la méthode PUT pour mettre à jour les données.
   };
 
+
+  // Gestion de l'affichage en cas de chargement ou d'erreur.
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  // Rendu du composant, incluant la navigation, l'accueil de l'utilisateur et la gestion du compte.
   return (
     <div className='master-contain'>
       <nav className="main-nav">

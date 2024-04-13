@@ -1,28 +1,31 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-// Définit un slice pour gérer l'état de l'utilisateur
+// Création d'un slice pour gérer l'état de l'utilisateur.
+// Un "slice" est une collection de reducer logic et actions pour une partie spécifique de l'état de l'application.
 const userSlice = createSlice({
-  name: 'user', // Nom du slice
+  name: 'user', // Nom du slice, utilisé dans les actions et le reducer.
   initialState: {
-    token: null, // Le token de l'utilisateur (null par défaut)
-    info: null, // Ajout d'un champ pour les informations de l'utilisateur
+    token: null, // Stocke le token d'authentification de l'utilisateur, initialisé à null.
+    info: null, // Stocke les informations supplémentaires de l'utilisateur, initialisé à null.
   },
   reducers: {
     setToken: (state, action) => {
-      state.token = action.payload; // Mettre à jour le token dans l'état
+      state.token = action.payload; // Met à jour le token de l'utilisateur dans l'état.
     },
     setUserInfo: (state, action) => {
-      state.info = action.payload; // Mettre à jour les informations de l'utilisateur
+      state.info = action.payload; // Met à jour les informations de l'utilisateur dans l'état.
     },
   },
 });
 
-// Exporte les actions
+// Exportation des actions générées par le slice.
+// Ces actions peuvent être dispatchées pour modifier l'état du slice 'user'.
 export const { setToken, setUserInfo } = userSlice.actions;
 
-// Crée le store Redux avec le reducer user
+// Configuration et création du store Redux.
+// Le store est configuré ici avec le reducer 'user' provenant du userSlice.
 export const store = configureStore({
   reducer: {
-    user: userSlice.reducer,
+    user: userSlice.reducer, // Intègre le reducer pour le slice 'user' dans le store global.
   },
 });

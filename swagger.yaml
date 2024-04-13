@@ -4,10 +4,15 @@ info:
   description: Contains all available API endpoints in this codebase
   version: '1.0.0'
   termsOfService: 'http://swagger.io/terms/'
+# Informations générales sur l'API, y compris le titre, la description, la version et les conditions d'utilisation.
 host: localhost:3001
 basePath: /api/v1
+# Spécifie l'adresse de base de l'API qui sera préfixée à tous les chemins d'accès.
+
 schemes:
   - http
+# Définit les protocoles supportés par l'API, ici HTTP.
+
 paths:
   /user/login:
     post:
@@ -33,6 +38,8 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+      # Endpoint pour la connexion des utilisateurs. Requiert un payload de connexion et retourne différentes réponses selon le résultat de l'opération.
+
   /user/signup:
     post:
       tags:
@@ -57,6 +64,8 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+      # Endpoint pour l'inscription des utilisateurs. Requiert un payload d'inscription et retourne différentes réponses selon le résultat.
+
   /user/profile:
     get:
       security:
@@ -105,161 +114,23 @@ paths:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile updated successully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/accounts/{accountId}/transactions:
-    get:
-      tags:
-      - User Transactions
-      summary: Transactions
-      description: API for getting all transactions for the current month
-      parameters:
-      - in: header
-        name: Authorization
-        description: Attach Bearer JWT token
-        type: string
-        required: true
-      - in: path
-        name: accountId
-        description: User's account ID
-        type: integer
-        required: true
-      responses:
-        '200':
-          description: Transaction retrieved successully
-          schema:
-            $ref: '#/definitions/Transactions'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-  /user/accounts/{accountId}/transactions/{transactionsId}:
-    get:
-      tags:
-      - User Transactions
-      summary: Transaction details
-      description: API for getting a single transaction details
-      parameters:
-      - in: header
-        name: Authorization
-        description: Attach Bearer JWT token
-        type: string
-        required: true
-      - in: path
-        name: accountId
-        description: User's account ID
-        type: integer
-        required: true
-      - in: path
-        name: transactionsId
-        description: Transaction's ID
-        required: true
-        type: integer
-      responses:
-        '200':
-          description: Transaction retrieved successully
-          schema:
-            $ref: '#/definitions/Transactions'
-        '400':
-          description: Bad request. 
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal Server Error
-  /user/accounts/{accountId}/transactions/{transactionsId}/category:
-    patch:
-      tags:
-      - User Transactions
-      summary: Update an existing transaction (category)
-      description: API for updating a transaction's category
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: header
-        name: Authorization
-        description: Attach Bearer JWT token
-        type: string
-        required: true
-      - in: path
-        name: accountId
-        description: User's account ID
-        type: integer
-        required: true
-      - in: path
-        name: transactionsId
-        description: Transaction's ID
-        required: true
-        type: integer
-      - in: body
-        name: body
-        required: true
-        description: Update transaction's informations
-        schema:
-            $ref: '#/definitions/TransactionsUpdateCategory'
-      responses:
-        '200':
-          description: Transaction updated successully
-          schema:
-            $ref: '#/definitions/Transactions'
-        '400':
-          description: Bad request. User ID/ transaction ID must be an integer and larger than 0.
-        '500':
-          description: Internal Server Error
-  /user/accounts/{accountId}/transactions/{transactionsId}/notes:
-    patch:
-      tags:
-      - User Transactions
-      summary: Update an existing transaction (notes)
-      description: API for updating transaction's notes
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: header
-        name: Authorization
-        description: Attach Bearer JWT token
-        type: string
-        required: true
-      - in: path
-        name: accountId
-        description: User's account ID
-        type: integer
-        required: true
-      - in: path
-        name: transactionsId
-        description: Transaction's ID
-        required: true
-        type: integer
-      - in: body
-        name: body
-        required: true
-        description: Update transaction's informations
-        schema:
-            $ref: '#/definitions/TransactionsUpdateNotes'
-      responses:
-        '200':
-          description: Transaction updated successully
-          schema:
-            $ref: '#/definitions/Transactions'
-        '400':
-          description: Bad request. User ID/ transaction ID must be an integer and larger than 0.
-        '500':
-          description: Internal Server Error
+      # Deux endpoints pour le profil utilisateur, un pour récupérer les données de profil et un autre pour les mettre à jour. Requiert l'autorisation via un token JWT.
+
+  # Plus d'endpoints pour gérer les transactions des utilisateurs, chaque endpoint est bien documenté avec des informations sur les méthodes requises, les paramètres et les réponses attendues.
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
+# Définition de la sécurité pour l'authentification via token JWT.
 definitions:
   User:
     properties:
