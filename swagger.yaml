@@ -118,6 +118,20 @@ paths:
       - Transactions de l'utilisateur
       summary: Transactions
       description: API pour récupérer toutes les transactions du mois en cours pour un compte utilisateur
+      # logique serveur si non codé en dure 
+  #     parameters:
+  # - in: query
+  #   name: start_date
+  #   type: string
+  #   format: date
+  #   required: true
+  #   description: Début du mois pour lequel les transactions sont requises.
+  # - in: query
+  #   name: end_date
+  #   type: string
+  #   format: date
+  #   required: true
+  #   description: Fin du mois pour lequel les transactions sont requises.
       parameters:
       - in: header
         name: Authorization
@@ -145,7 +159,7 @@ paths:
       tags:
       - Transactions de l'utilisateur
       summary: Détails de la transaction
-      description: ion: API pour obtenir les détails d'une transaction spécifique associée à un compte
+      description: API pour obtenir les détails d'une transaction spécifique associée à un compte
       parameters:
       - in: header
         name: Authorization
